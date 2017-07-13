@@ -61,3 +61,23 @@ Resources:
                 TemplatePath: GithubZip::templates/s3bucket.yaml
               OutputArtifacts:
                 - Name : CFNDeployArtifact
+        -
+          Name: DeployStage
+          Actions:
+            -
+              Name : CFNDeployAction2
+              ActionTypeId :
+                Category : Deploy
+                Owner : AWS
+                Provider : CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name : GithubZip
+                - Name : CFNDeployArtifact
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                RoleArn: !Ref ActionRoleArn
+                StackName: adhoc-p1-barclays-cp-action
+                TemplatePath: GithubZip::templates/s3bucketpolicy.yaml
+              OutputArtifacts:
+                - Name : CFNDeployArtifact2
