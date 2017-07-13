@@ -58,4 +58,4 @@ Resources:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !Ref ActionRoleArn
                 StackName: adhoc-p1-barclays-cp-action
-                TemplatePath: GithubZip::templates/vpc.yaml
+                TemplatePath: GithubZip::templates/s3bucket.yaml

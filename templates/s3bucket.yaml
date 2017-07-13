@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  myS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "adhoc-p1-barclays-codepipeline-bucket"
+Outputs:
+  myS3Bucket:
+    Value:
+      Ref: myS3Bucket
+
