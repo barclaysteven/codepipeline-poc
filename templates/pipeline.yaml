@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  OAuthToken:
+    Type: String
+    Description: "Personal Github OAuth token"
+    NoEcho: true
+  ServiceRoleArn:
+    Type: String
+    AllowedPattern: "arn:aws:iam::.+:role/adhoc-.+"
+    Description: "Service Role Arn"
+  ActionRoleArn:
+    Type: String
+    AllowedPattern: "arn:aws:iam::.+:role/adhoc-.+"
+    Description: "Action Role Arn"
+
+Resources:
+  Pipeline:
+    Type: "AWS::CodePipeline::Pipeline"
+    Properties:
+      ArtifactStore:
+        Location :
+           Fn::Sub : "adhoc.codepipeline-${AWS::Region}-${AWS::AccountId}"
+        Type: "S3"
+      Name: "adhoc-barclays-codepipeline-poc"
+      RestartExecutionOnUpdate: false
+      RoleArn : !Ref ServiceRoleArn
+      Stages:
+        -
+          Name: SourceStage
+          Actions:
+            -
+              Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              Configuration :
+                Owner : barclaysteven
+                Repo : codepipeline-poc
+                Branch : master
+                OAuthToken : !Ref OAuthToken
+              OutputArtifacts:
+                - Name: GithubZip
+        -
+          Name: DeployStage
+          Actions:
+            -
+              Name : CFNDeployAction
+              ActionTypeId :
+                Category : Deploy
+                Owner : AWS
+                Provider : CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name : GithubZip
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                RoleArn: !Ref ActionRoleArn
+                StackName: adhoc-p1-barclays-cp-action
+                TemplatePath: GithubZip::templates/vpc.yaml

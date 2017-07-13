@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  Vpc:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.200.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value: adhoc-barclays-codepipeline-poc
+Outputs:
+  VpcId:
+    Description: "VPC Id"
+    Value:
+      Ref: "Vpc"
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-vpcId"
