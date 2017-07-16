@@ -10,6 +10,20 @@ Resources:
       Bucket:
         Ref: myS3Bucket
       PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:GetObject"
+            Effect: "Allow"
+            Resource:
+              Fn::Join:
+                - ""
+                -
+                  - "arn:aws:s3:::"
+                  -
+                    Ref: "myS3Bucket"
+                  - "/*"
+            Principal: "*"
 Outputs:
   myS3Bucket:
     Value:
