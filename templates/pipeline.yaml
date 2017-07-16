@@ -43,7 +43,7 @@ Resources:
               OutputArtifacts:
                 - Name: GithubZip
         -
-          Name: DeployStage
+          Name: BucketCreateStage
           Actions:
             -
               Name : CFNDeployAction
@@ -63,7 +63,7 @@ Resources:
               OutputArtifacts:
                 - Name : CFNDeployArtifact
         -
-          Name: DeployStage
+          Name: PolicyCreateStage
           Actions:
             -
               Name : CFNDeployAction2
