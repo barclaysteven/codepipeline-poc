@@ -62,9 +62,7 @@ Resources:
                 TemplatePath: GithubZip::templates/s3bucket.yaml
               OutputArtifacts:
                 - Name : CFNDeployArtifact
-        -
-          Name: PolicyCreateStage
-          Actions:
+              RunOrder: 1
             -
               Name : CFNDeployAction2
               ActionTypeId :
@@ -93,3 +91,4 @@ Resources:
                 TemplatePath: GithubZip::templates/s3bucketpolicy.yaml
               OutputArtifacts:
                 - Name : CFNDeployArtifact2
+              RunOrder: 2
