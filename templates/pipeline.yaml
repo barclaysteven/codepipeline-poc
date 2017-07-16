@@ -79,7 +79,17 @@ Resources:
                 ActionMode: REPLACE_ON_FAILURE
                 RoleArn: !Ref ActionRoleArn
                 StackName: adhoc-p1-barclays-cp-action2
-                TemplateConfiguration: CFNDeployArtifact::s3Bucket.json
+                ParameterOverrides:
+                  '{
+                    "myS3Bucket" :
+                      {
+                        "Fn::GetParam" : [
+                          "CFNDeployArtifact",
+                          "s3Bucket.json",
+                          "myS3Bucket"
+                        ]
+                      }
+                  }'
                 TemplatePath: GithubZip::templates/s3bucketpolicy.yaml
               OutputArtifacts:
                 - Name : CFNDeployArtifact2
