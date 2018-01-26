@@ -2,9 +2,9 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "Tutorial Pipeline to instruct team on how to use AWS CodePipeline"
 Parameters:
   OAuthToken:
-    Type: 'AWS::SSM::Parameter::Value<String>'
+    Type: String
     Description: "Personal Github OAuth token"
-    # NoEcho: true
+    NoEcho: true
   ServiceRoleArn:
     Type: String
     AllowedPattern: "arn:aws:iam::.+:role/adhoc-.+"
@@ -42,71 +42,71 @@ Resources:
                 OAuthToken : !Ref OAuthToken
               OutputArtifacts:
                 - Name: GithubZip
-        -
-          Name: InvokeLambdaStage
-          Actions:
-            -
-              Name: InvokeLambda
-              ActionTypeId:
-                Category: Invoke
-                Owner: AWS
-                Provider: Lambda
-                Version: 1
-              InputArtifacts:
-                - Name: GithubZip
-              Configuration:
-                FunctionName: adhoc-p1-barclays-ecr-describe-repos
-                UserParameters: GithubZip::configs/lambda-parameters.json
-                RoleArn: !Ref ActionRoleArn
-              RunOrder: 1
 #        -
-#          Name: BucketCreateStage
+#          Name: InvokeLambdaStage
 #          Actions:
 #            -
-#              Name : CFNDeployAction
-#              ActionTypeId :
-#                Category : Deploy
-#                Owner : AWS
-#                Provider : CloudFormation
+#              Name: InvokeLambda
+#              ActionTypeId:
+#                Category: Invoke
+#                Owner: AWS
+#                Provider: Lambda
 #                Version: 1
 #              InputArtifacts:
-#                - Name : GithubZip
+#                - Name: GithubZip
 #              Configuration:
-#                ActionMode: REPLACE_ON_FAILURE
+#                FunctionName: adhoc-p1-barclays-ecr-describe-repos
+#                UserParameters: GithubZip::configs/lambda-parameters.json
 #                RoleArn: !Ref ActionRoleArn
-#                StackName: adhoc-p1-barclays-cp-action
-#                OutputFileName: s3Bucket.json
-#                TemplatePath: GithubZip::templates/s3bucket.yaml
-#              OutputArtifacts:
-#                - Name : CFNDeployArtifact
 #              RunOrder: 1
-#            -
-#              Name : CFNDeployAction2
-#              ActionTypeId :
-#                Category : Deploy
-#                Owner : AWS
-#                Provider : CloudFormation
-#                Version: 1
-#              InputArtifacts:
-#                - Name : GithubZip
-#                - Name : CFNDeployArtifact
-#              Configuration:
-#                ActionMode: REPLACE_ON_FAILURE
-#                RoleArn: !Ref ActionRoleArn
-#                StackName: adhoc-p1-barclays-cp-action2
-#                ParameterOverrides: |
-#                  {
-#                    "myS3Bucket" :
-#                      {
-#                        "Fn::GetParam" : [
-#                          "CFNDeployArtifact",
-#                          "s3Bucket.json",
-#                          "myS3Bucket"
-#                        ]
-#                      }
-#                  }
-#                TemplatePath: GithubZip::templates/s3bucketpolicy.yaml
-#              OutputArtifacts:
-#                - Name : CFNDeployArtifact2
-#              RunOrder: 2
+        -
+          Name: BucketCreateStage
+          Actions:
+            -
+              Name : CFNDeployAction
+              ActionTypeId :
+                Category : Deploy
+                Owner : AWS
+                Provider : CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name : GithubZip
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                RoleArn: !Ref ActionRoleArn
+                StackName: adhoc-p1-barclays-cp-action
+                OutputFileName: s3Bucket.json
+                TemplatePath: GithubZip::templates/s3bucket.yaml
+              OutputArtifacts:
+                - Name : CFNDeployArtifact
+              RunOrder: 1
+            -
+              Name : CFNDeployAction2
+              ActionTypeId :
+                Category : Deploy
+                Owner : AWS
+                Provider : CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name : GithubZip
+                - Name : CFNDeployArtifact
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                RoleArn: !Ref ActionRoleArn
+                StackName: adhoc-p1-barclays-cp-action2
+                ParameterOverrides: |
+                  {
+                    "myS3Bucket" :
+                      {
+                        "Fn::GetParam" : [
+                          "CFNDeployArtifact",
+                          "s3Bucket.json",
+                          "myS3Bucket"
+                        ]
+                      }
+                  }
+                TemplatePath: GithubZip::templates/s3bucketpolicy.yaml
+              OutputArtifacts:
+                - Name : CFNDeployArtifact2
+              RunOrder: 2
 
