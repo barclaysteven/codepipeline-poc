@@ -3,7 +3,10 @@ Resources:
   myS3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
-      BucketName: "adhoc-p1-barclays-codepipeline-bucket"
+      BucketName: "adhoc-p1-barclays-artifacts-bucket"
+      Tags:
+        - Key: "council"
+          Value: "PlatformSvc-DPT-VPC"
 Outputs:
   myS3Bucket:
     Value:
